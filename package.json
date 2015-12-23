@@ -31,6 +31,9 @@
     "text",
     "convert"
   ],
+  "dependencies": {
+    "escape-string-regexp": "^1.0.4"
+  },
   "devDependencies": {
     "ava": "*",
     "xo": "*"
