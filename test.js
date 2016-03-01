@@ -10,4 +10,7 @@ test(t => {
 	t.is(fn('thisIsATest', ' '), 'this is a test');
 	t.is(fn('thisIsATest', ''), 'thisisatest');
 	t.is(fn('unicornRainbow', '|'), 'unicorn|rainbow');
+	t.is(fn('myURLString', '_'), 'my_url_string');
+	t.is(fn('URLString', '_'), 'url_string');
+	t.is(fn('StringURL', '_'), 'string_url');
 });

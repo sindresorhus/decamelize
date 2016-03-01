@@ -11,6 +11,6 @@ module.exports = function (str, sep) {
 	var reSep = escapeStringRegexp(sep);
 
 	return str.replace(/([a-z\d])([A-Z])/g, '$1' + sep + '$2')
-					.replace(new RegExp('(' + reSep + '[A-Z])([A-Z])', 'g'), '$1' + reSep + '$2')
+					.replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + reSep + '$2')
 					.toLowerCase();
 };
