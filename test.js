@@ -1,16 +1,16 @@
 import test from 'ava';
-import fn from './';
+import m from './';
 
 test(t => {
-	t.is(fn(''), '');
-	t.is(fn('unicornsAndRainbows'), 'unicorns_and_rainbows');
-	t.is(fn('UNICORNS AND RAINBOWS'), 'unicorns and rainbows');
-	t.is(fn('unicorns-and-rainbows'), 'unicorns-and-rainbows');
-	t.is(fn('thisIsATest'), 'this_is_a_test');
-	t.is(fn('thisIsATest', ' '), 'this is a test');
-	t.is(fn('thisIsATest', ''), 'thisisatest');
-	t.is(fn('unicornRainbow', '|'), 'unicorn|rainbow');
-	t.is(fn('myURLString', '_'), 'my_url_string');
-	t.is(fn('URLString', '_'), 'url_string');
-	t.is(fn('StringURL', '_'), 'string_url');
+	t.is(m(''), '');
+	t.is(m('unicornsAndRainbows'), 'unicorns_and_rainbows');
+	t.is(m('UNICORNS AND RAINBOWS'), 'unicorns and rainbows');
+	t.is(m('unicorns-and-rainbows'), 'unicorns-and-rainbows');
+	t.is(m('thisIsATest'), 'this_is_a_test');
+	t.is(m('thisIsATest', ' '), 'this is a test');
+	t.is(m('thisIsATest', ''), 'thisisatest');
+	t.is(m('unicornRainbow', '|'), 'unicorn|rainbow');
+	t.is(m('myURLString', '_'), 'my_url_string');
+	t.is(m('URLString', '_'), 'url_string');
+	t.is(m('StringURL', '_'), 'string_url');
 });
