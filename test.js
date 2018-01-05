@@ -13,4 +13,5 @@ test(t => {
 	t.is(m('myURLString', '_'), 'my_url_string');
 	t.is(m('URLString', '_'), 'url_string');
 	t.is(m('StringURL', '_'), 'string_url');
+	t.is(m('thisHasSpecialCharactersLikeČandŠ', ' '), 'this has special characters like čand š');
 });
