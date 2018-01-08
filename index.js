@@ -1,5 +1,4 @@
 'use strict';
-
 const xRegExp = require('xregexp');
 
 module.exports = (text, separator) => {
@@ -9,7 +8,6 @@ module.exports = (text, separator) => {
 
 	separator = typeof separator === 'undefined' ? '_' : separator;
 
-	// Create 2 regex that support unicode characters
 	const regex1 = xRegExp('([\\p{Ll}\\d])(\\p{Lu})', 'g');
 	const regex2 = xRegExp('(\\p{Lu}+)(\\p{Lu}[\\p{Ll}\\d]+)', 'g');
 
