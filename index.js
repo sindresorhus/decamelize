@@ -1,4 +1,6 @@
 'use strict';
+const xRegExp = require('xregexp');
+
 module.exports = (text, separator) => {
 	if (typeof text !== 'string') {
 		throw new TypeError('Expected a string');
@@ -6,8 +8,11 @@ module.exports = (text, separator) => {
 
 	separator = typeof separator === 'undefined' ? '_' : separator;
 
+	const regex1 = xRegExp('([\\p{Ll}\\d])(\\p{Lu})', 'g');
+	const regex2 = xRegExp('(\\p{Lu}+)(\\p{Lu}[\\p{Ll}\\d]+)', 'g');
+
 	return text
-		.replace(/([a-z\d])([A-Z])/g, `$1${separator}$2`)
-		.replace(/([A-Z]+)([A-Z][a-z\d]+)/g, `$1${separator}$2`)
+		.replace(regex1, `$1${separator}$2`)
+		.replace(regex2, `$1${separator}$2`)
 		.toLowerCase();
 };
