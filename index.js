@@ -1,7 +1,7 @@
 'use strict';
 const xRegExp = require('xregexp');
 
-module.exports = (text, separator) => {
+const decamelize = (text, separator) => {
 	if (typeof text !== 'string') {
 		throw new TypeError('Expected a string');
 	}
@@ -19,3 +19,6 @@ module.exports = (text, separator) => {
 		.replace(regex2, `$1${separator}$2`)
 		.toLowerCase();
 };
+
+module.exports = decamelize;
+module.exports.default = decamelize;
