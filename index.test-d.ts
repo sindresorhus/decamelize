@@ -1,4 +1,4 @@
-import {expectType} from 'tsd-check';
+import {expectType} from 'tsd';
 import decamelize from '.';
 
 expectType<string>(decamelize('unicornRainbow'));
