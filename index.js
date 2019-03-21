@@ -1,12 +1,10 @@
 'use strict';
 const xRegExp = require('xregexp');
 
-const decamelize = (text, separator) => {
-	if (typeof text !== 'string') {
-		throw new TypeError('Expected a string');
+const decamelize = (text, separator = '_') => {
+	if (!(typeof text === 'string' && typeof text === 'string')) {
+		throw new TypeError('The `text` and `separator` arguments should be of type `string`');
 	}
-
-	separator = typeof separator === 'undefined' ? '_' : separator;
 
 	const regex1 = xRegExp('([\\p{Ll}\\d])(\\p{Lu})', 'g');
 	const regex2 = xRegExp('(\\p{Lu}+)(\\p{Lu}[\\p{Ll}\\d]+)', 'g');
