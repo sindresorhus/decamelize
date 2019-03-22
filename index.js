@@ -2,7 +2,7 @@
 const xRegExp = require('xregexp');
 
 const decamelize = (text, separator = '_') => {
-	if (!(typeof text === 'string' && typeof text === 'string')) {
+	if (!(typeof text === 'string' && typeof separator === 'string')) {
 		throw new TypeError('The `text` and `separator` arguments should be of type `string`');
 	}
 
