@@ -19,4 +19,5 @@ const decamelize = (text, separator = '_') => {
 };
 
 module.exports = decamelize;
+// TODO: Remove this for the next major release
 module.exports.default = decamelize;
