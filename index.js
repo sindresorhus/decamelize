@@ -1,7 +1,9 @@
 'use strict';
 const xRegExp = require('xregexp');
 
-const decamelize = (text, separator = '_') => {
+function decamelize(text, separatorArg) {
+	const separator = typeof separatorArg === 'undefined' ? '_' : separatorArg;
+
 	if (!(typeof text === 'string' && typeof separator === 'string')) {
 		throw new TypeError(
 			'The `text` and `separator` arguments should be of type `string`'
@@ -20,7 +22,7 @@ const decamelize = (text, separator = '_') => {
 			.replace(regex2, '$1' + separator + '$2')
 			.toLowerCase()
 	);
-};
+}
 
 module.exports = decamelize;
 // TODO: Remove this for the next major release
