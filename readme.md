@@ -26,7 +26,7 @@ decamelize('unicornRainbow', '-');
 
 ## API
 
-### decamelize(input, [separator])
+### decamelize(input, separator?)
 
 #### input
 
@@ -43,6 +43,14 @@ Default: `_`
 See [`camelcase`](https://github.com/sindresorhus/camelcase) for the inverse.
 
 
-## License
+---
 
-MIT © [Sindre Sorhus](https://sindresorhus.com)
+<div align="center">
+	<b>
+		<a href="https://tidelift.com/subscription/pkg/npm-decamelize?utm_source=npm-decamelize&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
+	</b>
+	<br>
+	<sub>
+		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+	</sub>
+</div>
