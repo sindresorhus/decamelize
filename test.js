@@ -18,4 +18,5 @@ test('handles acronyms', t => {
 	t.is(decamelize('URLString'), 'url_string');
 	t.is(decamelize('StringURL'), 'string_url');
 	t.is(decamelize('testGUILabel'), 'test_gui_label');
+	t.is(decamelize('CAPLOCKED1'), 'caplocked1');
 });
