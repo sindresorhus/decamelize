@@ -4,6 +4,7 @@
 	"description": "Convert a camelized string into a lowercased one with a custom separator: unicornRainbow → unicorn_rainbow",
 	"license": "MIT",
 	"repository": "sindresorhus/decamelize",
+	"funding": "https://github.com/sponsors/sindresorhus",
 	"author": {
 		"name": "Sindre Sorhus",
 		"email": "sindresorhus@gmail.com",
@@ -28,13 +29,12 @@
 		"dash",
 		"hyphen",
 		"string",
-		"str",
 		"text",
 		"convert"
 	],
 	"devDependencies": {
-		"ava": "^1.4.1",
-		"tsd": "^0.7.2",
+		"ava": "^2.4.0",
+		"tsd": "^0.11.0",
 		"xo": "^0.24.0"
 	}
 }

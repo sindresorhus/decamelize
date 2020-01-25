@@ -3,13 +3,11 @@
 > Convert a camelized string into a lowercased one with a custom separator<br>
 > Example: `unicornRainbow` → `unicorn_rainbow`
 
-
 ## Install
 
 ```
 $ npm install decamelize
 ```
-
 
 ## Usage
 
@@ -23,7 +21,6 @@ decamelize('unicornRainbow', '-');
 //=> 'unicorn-rainbow'
 ```
 
-
 ## API
 
 ### decamelize(input, separator?)
@@ -34,14 +31,12 @@ Type: `string`
 
 #### separator
 
-Type: `string`<br>
-Default: `_`
-
+Type: `string`\
+Default: `'_'`
 
 ## Related
 
 See [`camelcase`](https://github.com/sindresorhus/camelcase) for the inverse.
-
 
 ---
 
