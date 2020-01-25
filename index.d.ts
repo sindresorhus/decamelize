@@ -16,4 +16,5 @@ decamelize('unicornRainbow', '-');
 ```
 */
 declare function decamelize(string: string, separator?: string): string;
+
 export = decamelize;
