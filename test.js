@@ -11,6 +11,7 @@ test('decamelize', t => {
 	t.is(decamelize('thisIsATest', ''), 'thisisatest');
 	t.is(decamelize('unicornRainbow', '|'), 'unicorn|rainbow');
 	t.is(decamelize('thisHasSpecialCharactersLikeČandŠ', ' '), 'this has special characters like čand š');
+	t.is(decamelize('volume3D'), 'volume_3d');
 });
 
 test('handles acronyms', t => {
