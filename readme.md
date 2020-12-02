@@ -1,6 +1,6 @@
-# decamelize [![Build Status](https://travis-ci.org/sindresorhus/decamelize.svg?branch=master)](https://travis-ci.org/sindresorhus/decamelize)
+# decamelize
 
-> Convert a camelized string into a lowercased one with a custom separator<br>
+> Convert a camelized string into a lowercased one with a custom separator\
 > Example: `unicornRainbow` → `unicorn_rainbow`
 
 ## Install
