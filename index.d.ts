@@ -1,19 +1,40 @@
 declare namespace decamelize {
 	interface Options {
 		/**
-		Set to true to preserve sequences of uppercase characters.
+		The separator to use to put in between the words from `string`.
 
-		decamelize('testGUILabel', {preserveConsecutiveUppercase: true}) → `test_GUI_label`
-		decamelize('testGUILabel', {preserveConsecutiveUppercase: false}) → `test_gui_label`
-		@default false
-		*/
-		readonly preserveConsecutiveUppercase?: boolean;
-
-		/**
-		 The separator to use to put in between the words from `string`.
 		@default '_'
+
+		@example
+		```
+		import decamelize = require('decamelize');
+
+		decamelize('unicornRainbow');
+		//=> 'unicorn_rainbow'
+
+		decamelize('unicornRainbow', {separator: '-'});
+		//=> 'unicorn-rainbow'
+		```
 		*/
 		readonly separator?: string;
+
+		/**
+		Set to true to preserve sequences of uppercase characters.
+
+		@default false
+
+		@example
+		```
+		import decamelize = require('decamelize');
+
+		decamelize('testGUILabel');
+		//=> 'test_gui_label'
+
+		decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+		//=> 'test_GUI_label'
+		```
+		*/
+		readonly preserveConsecutiveUppercase?: boolean;
 	}
 }
 
@@ -29,7 +50,7 @@ import decamelize = require('decamelize');
 decamelize('unicornRainbow');
 //=> 'unicorn_rainbow'
 
-decamelize('unicornRainbow', { separator: '-' });
+decamelize('unicornRainbow', {separator: '-'});
 //=> 'unicorn-rainbow'
 ```
 */
