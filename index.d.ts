@@ -19,7 +19,7 @@ declare namespace decamelize {
 		readonly separator?: string;
 
 		/**
-		Set to true to preserve sequences of uppercase characters.
+		Preserve sequences of uppercase characters.
 
 		@default false
 
