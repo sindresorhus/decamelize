@@ -44,6 +44,8 @@ Type: `object`
 Type: `string`\
 Default: `'_'`
 
+Character or string inserted to separate words in `string`.
+
 ```js
 cosnt decamelize = require('decamelize');
 

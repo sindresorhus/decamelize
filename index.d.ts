@@ -1,7 +1,7 @@
 declare namespace decamelize {
 	interface Options {
 		/**
-		The separator to use to put in between the words from `string`.
+		Character or string inserted to separate words in `string`.
 
 		@default '_'
 
