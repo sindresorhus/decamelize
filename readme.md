@@ -44,12 +44,32 @@ Type: `object`
 Type: `string`\
 Default: `'_'`
 
+```js
+cosnt decamelize = require('decamelize');
+
+decamelize('unicornRainbow');
+//=> 'unicorn_rainbow'
+
+decamelize('unicornRainbow', {separator: '-'});
+//=> 'unicorn-rainbow'
+```
+
 ##### preserveConsecutiveUppercase
 
 Type: `boolean`\
 Default: `false`
 
-Set to `true` to preserve sequences of uppercase characters: `testGUILabel`→`test_gui_label`.
+Preserve sequences of uppercase characters.
+
+```js
+const decamelize = require('decamelize');
+
+decamelize('testGUILabel');
+//=> 'test_gui_label'
+
+decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+//=> 'test_GUI_label'
+```
 
 ## Related
 
