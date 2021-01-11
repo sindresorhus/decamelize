@@ -17,22 +17,61 @@ const decamelize = require('decamelize');
 decamelize('unicornRainbow');
 //=> 'unicorn_rainbow'
 
-decamelize('unicornRainbow', '-');
+decamelize('unicornRainbow', {separator: '-'});
 //=> 'unicorn-rainbow'
+
+decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+//=> 'test_GUI_label'
+
+decamelize('testGUILabel', {preserveConsecutiveUppercase: false});
+//=> 'test_gui_label'
 ```
 
 ## API
 
-### decamelize(input, separator?)
+### decamelize(input, options?)
 
 #### input
 
 Type: `string`
 
-#### separator
+#### options
+
+Type: `object`
+
+##### separator
 
 Type: `string`\
 Default: `'_'`
+
+Character or string inserted to separate words in `string`.
+
+```js
+cosnt decamelize = require('decamelize');
+
+decamelize('unicornRainbow');
+//=> 'unicorn_rainbow'
+
+decamelize('unicornRainbow', {separator: '-'});
+//=> 'unicorn-rainbow'
+```
+
+##### preserveConsecutiveUppercase
+
+Type: `boolean`\
+Default: `false`
+
+Preserve sequences of uppercase characters.
+
+```js
+const decamelize = require('decamelize');
+
+decamelize('testGUILabel');
+//=> 'test_gui_label'
+
+decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+//=> 'test_GUI_label'
+```
 
 ## Related
 
