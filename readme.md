@@ -12,7 +12,7 @@ $ npm install decamelize
 ## Usage
 
 ```js
-const decamelize = require('decamelize');
+import decamelize from 'decamelize';
 
 decamelize('unicornRainbow');
 //=> 'unicorn_rainbow'
@@ -47,7 +47,7 @@ Default: `'_'`
 Character or string inserted to separate words in `string`.
 
 ```js
-cosnt decamelize = require('decamelize');
+import decamelize from 'decamelize';
 
 decamelize('unicornRainbow');
 //=> 'unicorn_rainbow'
@@ -64,7 +64,7 @@ Default: `false`
 Preserve sequences of uppercase characters.
 
 ```js
-const decamelize = require('decamelize');
+import decamelize from 'decamelize';
 
 decamelize('testGUILabel');
 //=> 'test_gui_label'
