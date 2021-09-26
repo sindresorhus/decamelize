@@ -16,13 +16,13 @@ const handlePreserveConsecutiveUppercase = (decamelized, separator) => {
 	);
 };
 
-const decamelize = (
+export default function decamelize(
 	text,
 	{
 		separator = '_',
 		preserveConsecutiveUppercase = false,
 	} = {},
-) => {
+) {
 	if (!(typeof text === 'string' && typeof separator === 'string')) {
 		throw new TypeError(
 			'The `text` and `separator` arguments should be of type `string`',
@@ -56,6 +56,4 @@ const decamelize = (
 			replacement,
 		)
 		.toLowerCase();
-};
-
-export default decamelize;
+}

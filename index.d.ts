@@ -1,41 +1,39 @@
-declare namespace decamelize {
-	interface Options {
-		/**
-		Character or string inserted to separate words in `string`.
+export interface Options {
+	/**
+	Character or string inserted to separate words in `string`.
 
-		@default '_'
+	@default '_'
 
-		@example
-		```
-		import decamelize = require('decamelize');
+	@example
+	```
+	import decamelize from 'decamelize';
 
-		decamelize('unicornRainbow');
-		//=> 'unicorn_rainbow'
+	decamelize('unicornRainbow');
+	//=> 'unicorn_rainbow'
 
-		decamelize('unicornRainbow', {separator: '-'});
-		//=> 'unicorn-rainbow'
-		```
-		*/
-		readonly separator?: string;
+	decamelize('unicornRainbow', {separator: '-'});
+	//=> 'unicorn-rainbow'
+	```
+	*/
+	readonly separator?: string;
 
-		/**
-		Preserve sequences of uppercase characters.
+	/**
+	Preserve sequences of uppercase characters.
 
-		@default false
+	@default false
 
-		@example
-		```
-		import decamelize = require('decamelize');
+	@example
+	```
+	import decamelize from 'decamelize';
 
-		decamelize('testGUILabel');
-		//=> 'test_gui_label'
+	decamelize('testGUILabel');
+	//=> 'test_gui_label'
 
-		decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
-		//=> 'test_GUI_label'
-		```
-		*/
-		readonly preserveConsecutiveUppercase?: boolean;
-	}
+	decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
+	//=> 'test_GUI_label'
+	```
+	*/
+	readonly preserveConsecutiveUppercase?: boolean;
 }
 
 /**
@@ -45,7 +43,7 @@ Convert a camelized string into a lowercased one with a custom separator: `unico
 
 @example
 ```
-import decamelize = require('decamelize');
+import decamelize from 'decamelize';
 
 decamelize('unicornRainbow');
 //=> 'unicorn_rainbow'
@@ -54,6 +52,5 @@ decamelize('unicornRainbow', {separator: '-'});
 //=> 'unicorn-rainbow'
 ```
 */
-declare function decamelize(string: string, options?: decamelize.Options): string;
+export default function decamelize(string: string, options?: Options): string;
 
-export = decamelize;

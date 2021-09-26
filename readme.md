@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install decamelize
+npm install decamelize
 ```
 
 ## Usage
