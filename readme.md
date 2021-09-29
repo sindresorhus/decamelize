@@ -3,6 +3,8 @@
 > Convert a camelized string into a lowercased one with a custom separator\
 > Example: `unicornRainbow` → `unicorn_rainbow`
 
+If you use this on untrusted user input, don't forget to limit the length to something reasonable.
+
 ## Install
 
 ```
