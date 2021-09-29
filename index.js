@@ -55,7 +55,7 @@ module.exports = (
 	}
 
 	// Split multiple uppercase characters followed by one or more lowercase characters.
-	// `my_URLstring` → `my_url_string`
+	// `my_URLstring` → `my_ur_lstring`
 	return decamelized
 		.replace(
 			/(\p{Uppercase_Letter})(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
