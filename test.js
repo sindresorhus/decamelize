@@ -16,6 +16,7 @@ test('decamelize', t => {
 	t.is(decamelize('thisIsATest', {separator: ' '}), 'this is a test');
 	t.is(decamelize('thisIsATest', {separator: ''}), 'thisisatest');
 	t.is(decamelize('unicornRainbow', {separator: '|'}), 'unicorn|rainbow');
+	t.is(decamelize('unicornRainbow', {separator: '-'}), 'unicorn-rainbow');
 	t.is(
 		decamelize('thisHasSpecialCharactersLikeČandŠ', {separator: ' '}),
 		'this has special characters like čand š',
