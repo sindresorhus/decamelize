@@ -52,7 +52,7 @@ export default function decamelize(
 	// `my_URLstring` → `my_ur_lstring`
 	return decamelized
 		.replace(
-			/(\p{Uppercase_Letter}+)(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
+			/(\p{Uppercase_Letter})(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
 			replacement,
 		)
 		.toLowerCase();
