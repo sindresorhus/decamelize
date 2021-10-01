@@ -53,4 +53,3 @@ decamelize('unicornRainbow', {separator: '-'});
 ```
 */
 export default function decamelize(string: string, options?: Options): string;
-
