@@ -11,6 +11,8 @@ If you use this on untrusted user input, don't forget to limit the length to som
 npm install decamelize
 ```
 
+*If you need Safari support, [stay on](https://github.com/sindresorhus/decamelize/issues/24) [version 3](https://github.com/sindresorhus/decamelize/issues/36) [until they implement](https://caniuse.com/js-regexp-lookbehind) regex lookbehinds.*
+
 ## Usage
 
 ```js
