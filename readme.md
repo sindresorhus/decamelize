@@ -48,7 +48,7 @@ Type: `object`
 Type: `string`\
 Default: `'_'`
 
-Character or string inserted to separate words in `string`.
+The character or string used to separate words.
 
 ```js
 import decamelize from 'decamelize';
@@ -79,16 +79,5 @@ decamelize('testGUILabel', {preserveConsecutiveUppercase: true});
 
 ## Related
 
-See [`camelcase`](https://github.com/sindresorhus/camelcase) for the inverse.
-
----
-
-<div align="center">
-	<b>
-		<a href="https://tidelift.com/subscription/pkg/npm-decamelize?utm_source=npm-decamelize&utm_medium=referral&utm_campaign=readme">Get professional support for this package with a Tidelift subscription</a>
-	</b>
-	<br>
-	<sub>
-		Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
-	</sub>
-</div>
+- [camelcase](https://github.com/sindresorhus/camelcase) - The inverse of this package
+- [decamelize-keys](https://github.com/sindresorhus/decamelize-keys) - Convert object keys from camel case
