@@ -100,6 +100,12 @@ test('keeping blocks of consecutive uppercase characters but split the last if l
 		}),
 		'CAPLOCKED1',
 	);
+	/// t.is(
+	// 	decamelize('aBC', {
+	// 		preserveConsecutiveUppercase: true,
+	// 	}),
+	// 	'a_b_c',
+	// );
 });
 
 test('long strings', t => {

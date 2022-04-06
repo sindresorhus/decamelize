@@ -1,6 +1,6 @@
-export interface Options {
+export type Options = {
 	/**
-	Character or string inserted to separate words in `string`.
+	The character or string used to separate words.
 
 	@default '_'
 
@@ -34,7 +34,7 @@ export interface Options {
 	```
 	*/
 	readonly preserveConsecutiveUppercase?: boolean;
-}
+};
 
 /**
 Convert a camelized string into a lowercased one with a custom separator: `unicornRainbow` → `unicorn_rainbow`.
