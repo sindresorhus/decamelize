@@ -1,5 +1,13 @@
+import process from 'node:process';
 import test from 'ava';
 import decamelize from './index.js';
+
+const measureMs = fn => {
+	const start = process.hrtime.bigint();
+	fn();
+	const end = process.hrtime.bigint();
+	return Number(end - start) / 1e6;
+};
 
 test('decamelize', t => {
 	t.is(decamelize(''), '');
@@ -142,4 +150,50 @@ test('long strings', t => {
 			)
 			.join('Y!') + 'y',
 	);
+});
+
+test('Performance: pathological input with preserveConsecutiveUppercase enabled', t => {
+	const n = 100_000;
+	const input = 'A'.repeat(n) + '[';
+
+	// Warm-up JIT
+	decamelize(input, {preserveConsecutiveUppercase: true});
+
+	const ms = measureMs(() => {
+		decamelize(input, {preserveConsecutiveUppercase: true});
+	});
+
+	// Should be well under this on CI after the regex fix.
+	t.true(ms < 250, `expected <250ms, got ${ms.toFixed(3)}ms`);
+});
+
+test('Performance: pathological input with default options', t => {
+	const n = 100_000;
+	const input = 'A'.repeat(n) + '[';
+
+	// Warm-up
+	decamelize(input, {preserveConsecutiveUppercase: false});
+
+	const ms = measureMs(() => {
+		decamelize(input, {preserveConsecutiveUppercase: false});
+	});
+
+	// Default path was never affected; keep very generous bound.
+	t.true(ms < 100, `expected <100ms, got ${ms.toFixed(3)}ms`);
+});
+
+test('Performance: single uppercase lookaround pattern', t => {
+	// Exercise the single-uppercase-with-lookaround path.
+	const n = 50_000;
+	const input = ('aA').repeat(n);
+
+	// Warm-up
+	decamelize(input, {preserveConsecutiveUppercase: true});
+
+	const ms = measureMs(() => {
+		decamelize(input, {preserveConsecutiveUppercase: true});
+	});
+
+	// Generous bound to avoid flakiness in CI.
+	t.true(ms < 250, `expected <250ms, got ${ms.toFixed(3)}ms`);
 });

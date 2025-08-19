@@ -10,8 +10,10 @@ const handlePreserveConsecutiveUppercase = (decamelized, separator) => {
 
 	// Remaining uppercase sequences will be separated from lowercase sequences.
 	// `data_For_USACounties` → `data_for_USA_counties`
+	// We anchor at the start of an uppercase run to avoid excessive backtracking on
+	// long all-uppercase substrings followed by a non-lowercase character.
 	return decamelized.replace(
-		/(\p{Uppercase_Letter}+)(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
+		/(?<!\p{Uppercase_Letter})(\p{Uppercase_Letter}+)(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
 		(_, $1, $2) => $1 + separator + $2.toLowerCase(),
 	);
 };
