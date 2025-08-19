@@ -1,6 +1,6 @@
 {
 	"name": "decamelize",
-	"version": "6.0.0",
+	"version": "6.0.1",
 	"description": "Convert a camelized string into a lowercased one with a custom separator: unicornRainbow → unicorn_rainbow",
 	"license": "MIT",
 	"repository": "sindresorhus/decamelize",
