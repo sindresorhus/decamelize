@@ -13,7 +13,7 @@ const handlePreserveConsecutiveUppercase = (decamelized, separator) => {
 	// We anchor at the start of an uppercase run to avoid excessive backtracking on
 	// long all-uppercase substrings followed by a non-lowercase character.
 	return decamelized.replace(
-		/(?<!\p{Uppercase_Letter})(\p{Uppercase_Letter}+)(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
+		/(?<![\p{Uppercase_Letter}])(\p{Uppercase_Letter}+)(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
 		(_, $1, $2) => $1 + separator + $2.toLowerCase(),
 	);
 };
@@ -23,6 +23,7 @@ export default function decamelize(
 	{
 		separator = '_',
 		preserveConsecutiveUppercase = false,
+		separateDigits = false,
 	} = {},
 ) {
 	if (!(typeof text === 'string' && typeof separator === 'string')) {
@@ -46,16 +47,28 @@ export default function decamelize(
 		replacement,
 	);
 
+	let result;
 	if (preserveConsecutiveUppercase) {
-		return handlePreserveConsecutiveUppercase(decamelized, separator);
+		result = handlePreserveConsecutiveUppercase(decamelized, separator);
+	} else {
+		// Split multiple uppercase characters followed by one or more lowercase characters.
+		// `my_URLstring` → `my_ur_lstring`
+		result = decamelized
+			.replace(
+				/(\p{Uppercase_Letter})(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
+				replacement,
+			)
+			.toLowerCase();
 	}
 
-	// Split multiple uppercase characters followed by one or more lowercase characters.
-	// `my_URLstring` → `my_ur_lstring`
-	return decamelized
-		.replace(
-			/(\p{Uppercase_Letter})(\p{Uppercase_Letter}\p{Lowercase_Letter}+)/gu,
-			replacement,
-		)
-		.toLowerCase();
+	// Optionally split letter/digit boundaries so that identifiers such as
+	// `foo2bar` become `foo_2_bar`. Only letter↔digit boundaries are touched, so
+	// any existing separators are preserved.
+	if (separateDigits) {
+		result = result
+			.replace(/([\p{Letter}])([\d])/gu, `$1${separator}$2`)
+			.replace(/([\d])([\p{Letter}])/gu, `$1${separator}$2`);
+	}
+
+	return result;
 }

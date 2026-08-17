@@ -34,6 +34,24 @@ export type Options = {
 	```
 	*/
 	readonly preserveConsecutiveUppercase?: boolean;
+
+	/**
+	Separate letters from digits with the `separator`.
+
+	@default false
+
+	@example
+	```js
+	import decamelize from 'decamelize';
+
+	decamelize('foo2bar');
+	//=> 'foo2bar'
+
+	decamelize('foo2bar', {separateDigits: true});
+	//=> 'foo_2_bar'
+	```
+	*/
+	readonly separateDigits?: boolean;
 };
 
 /**

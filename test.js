@@ -43,6 +43,16 @@ test('separator in string', t => {
 	t.is(decamelize('my_URL_string'), 'my_url_string');
 });
 
+test('separate digits', t => {
+	t.is(decamelize('a2b', {separateDigits: true}), 'a_2_b');
+	t.is(decamelize('foo2bar', {separateDigits: true}), 'foo_2_bar');
+	t.is(decamelize('foo2Bar', {separateDigits: true}), 'foo_2_bar');
+	t.is(decamelize('version10Release', {separateDigits: true, separator: '-'}), 'version-10-release');
+	// Default behaviour is unchanged when the option is omitted.
+	t.is(decamelize('a2b'), 'a2b');
+	t.is(decamelize('myURLstring', {separateDigits: true}), 'my_ur_lstring');
+});
+
 test('separator and options passed', t => {
 	t.is(
 		decamelize('testGUILabel', {
