@@ -450,3 +450,28 @@ test('preserves the exact custom separator in both casing modes', () => {
 	assert.equal(decamelize('Foo', {separator: 'XYZ'}), 'foo');
 	assert.equal(decamelize('fooXYZbar', {separator: 'XYZ'}), 'fooXYZxyXYZzbar');
 });
+
+test('recognizes titlecase letters at word boundaries', () => {
+	const cases = [
+		['helloǅuro', 'hello_ǆuro', 'hello_ǆuro'],
+		['ǅuroName', 'ǆuro_name', 'ǆuro_name'],
+		['XMLǅuro', 'xml_ǆuro', 'XML_ǆuro'],
+		['fooǈubav', 'foo_ǉubav', 'foo_ǉubav'],
+		['fooǋegoš', 'foo_ǌegoš', 'foo_ǌegoš'],
+		['aᾈλφα', 'a_ᾀλφα', 'a_ᾀλφα'],
+		['nameǅ', 'name_ǆ', 'name_ǆ'],
+		['ǅǅName', 'ǆǆ_name', 'ǅǅ_name'],
+		['ᾼB', 'ᾳb', 'ᾼB'],
+	];
+
+	for (const [input, lowercased, preserved] of cases) {
+		for (const separator of ['_', '-', '', 'X']) {
+			assert.equal(decamelize(input, {separator}), lowercased.replaceAll('_', separator));
+			assert.equal(decamelize(input, {separator, preserveConsecutiveUppercase: true}), preserved.replaceAll('_', separator));
+		}
+
+		for (const preserveConsecutiveUppercase of [false, true]) {
+			assert.equal(decamelize(input.normalize('NFD'), {preserveConsecutiveUppercase}), decamelize(input, {preserveConsecutiveUppercase}).normalize('NFD'));
+		}
+	}
+});
