@@ -475,3 +475,20 @@ test('recognizes titlecase letters at word boundaries', () => {
 		}
 	}
 });
+
+test('recognizes Unicode decimal digits at word boundaries', () => {
+	for (const digit of ['٢', '۲', '२', '২', '๒', '２', '\u{104A2}', '\u{1D7DA}']) {
+		for (const separator of ['_', '-', '', 'X']) {
+			for (const preserveConsecutiveUppercase of [false, true]) {
+				const options = {separator, preserveConsecutiveUppercase};
+				assert.equal(decamelize(`version${digit}Value`, options), `version${digit}${separator}value`);
+				assert.equal(decamelize(`${digit}Value`, options), `${digit}${separator}value`);
+				assert.equal(decamelize(`version${digit}${digit}Value`, options), `version${digit}${digit}${separator}value`);
+				assert.equal(decamelize(`version${digit}\u{301}Value`, options), `version${digit}\u{301}${separator}value`);
+				assert.equal(decamelize(`A${digit}B`, options), `${preserveConsecutiveUppercase ? 'A' : 'a'}${digit}${separator}b`);
+				assert.equal(decamelize(`allIDs${digit}`, options), `all${separator}${preserveConsecutiveUppercase ? 'I' : 'i'}${separator}ds${digit}`);
+				assert.equal(decamelize(digit.repeat(3), options), digit.repeat(3));
+			}
+		}
+	}
+});
