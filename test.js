@@ -492,3 +492,34 @@ test('recognizes Unicode decimal digits at word boundaries', () => {
 		}
 	}
 });
+
+test('recognizes Unicode casing outside letter categories', () => {
+	const cases = [
+		['fooⅣBar', 'foo_ⅳ_bar', 'foo_Ⅳ_bar'],
+		['ⅣValue', 'ⅳ_value', 'Ⅳ_value'],
+		['valueⅳName', 'valueⅳ_name', 'valueⅳ_name'],
+		['ᵃName', 'ᵃ_name', 'ᵃ_name'],
+		['fooⒶBar', 'foo_ⓐ_bar', 'foo_Ⓐ_bar'],
+		['ⓐName', 'ⓐ_name', 'ⓐ_name'],
+		['fooⅣⅤ', 'foo_ⅳⅴ', 'foo_ⅣⅤ'],
+		['ⅣⅤs', 'ⅳⅴs', 'ⅣⅤs'],
+		['ABsⅣ', 'a_bs_ⅳ', 'A_bs_ⅳ'],
+		['ABsⓐ', 'a_bsⓐ', 'A_bsⓐ'],
+	];
+
+	for (const [input, lowercased, preserved] of cases) {
+		for (const separator of ['_', '-', '', 'X']) {
+			assert.equal(decamelize(input, {separator}), lowercased.replaceAll('_', separator));
+			assert.equal(decamelize(input, {separator, preserveConsecutiveUppercase: true}), preserved.replaceAll('_', separator));
+		}
+	}
+
+	// U+0345 has the Lowercase property, but is a combining mark belonging to its base letter.
+	for (const input of ['ᾼB', 'ᾼBC', 'Α\u{345}B', 'A\u{345}b', 'AB\u{345}c']) {
+		for (const preserveConsecutiveUppercase of [false, true]) {
+			assert.equal(decamelize(input.normalize('NFD'), {preserveConsecutiveUppercase}), decamelize(input, {preserveConsecutiveUppercase}).normalize('NFD'));
+		}
+	}
+
+	assert.equal(decamelize('\u{345}B'), '\u{345}b');
+});

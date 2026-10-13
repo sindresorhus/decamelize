@@ -1,9 +1,10 @@
 // An uppercase or titlecase letter, with the characters before and after it. A combining mark belongs to the letter before it, which matters for decomposed (NFD) text, so marks are skipped.
+// Unicode casing properties also include characters outside the letter categories, such as Roman numerals and circled letters.
 // A Unicode decimal digit counts as lowercase before the letter, and as uppercase after it: `O2Level` → `O2_Level`.
 // An `s` after the letter at the end of a word makes it a plural acronym, not a new word: `userIDs` → `user_ids`, not `user_i_ds`. Before another word, it is more often a word like `Is` (`userIDIsValid`), so it is split there. A digit continues a word, like in `mp3Player`.
 // Everything is decided on the original text in one pass, as a separator inserted earlier would hide where a word ends.
 // The leading lookahead makes the lookbehind only run before an uppercase or titlecase letter, which keeps it linear.
-const uppercaseLetter = /(?=[\p{Uppercase_Letter}\p{Titlecase_Letter}])(?<=(?:([\p{Lowercase_Letter}\p{Decimal_Number}])|([\p{Uppercase_Letter}\p{Titlecase_Letter}]))?\p{Mark}*)[\p{Uppercase_Letter}\p{Titlecase_Letter}](?=\p{Mark}*(?:(s(?![\p{Letter}\p{Mark}\p{Decimal_Number}]))|(\p{Lowercase_Letter})|([\p{Uppercase_Letter}\p{Titlecase_Letter}\p{Decimal_Number}]))?)/gu;
+const uppercaseLetter = /(?=[\p{Uppercase}\p{Titlecase_Letter}])(?<=(?:([\p{Lowercase}\p{Decimal_Number}])|([\p{Uppercase}\p{Titlecase_Letter}]))?\p{Mark}*)[\p{Uppercase}\p{Titlecase_Letter}](?=\p{Mark}*(?:(s(?![\p{Letter}\p{Uppercase}\p{Lowercase}\p{Mark}\p{Decimal_Number}]))|(\p{Lowercase})|([\p{Uppercase}\p{Titlecase_Letter}\p{Decimal_Number}]))?)/gu;
 
 export default function decamelize(
 	text,
