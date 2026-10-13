@@ -128,6 +128,41 @@ test('keeping blocks of consecutive uppercase characters but split the last if l
 	// );
 });
 
+test('splits words with decomposed accents', t => {
+	// Decomposed (NFD) text, common in macOS file names, puts a combining mark after the base letter, which hid the word boundary.
+	t.is(decamelize('cafe\u{301}Menu'), 'cafe\u{301}_menu');
+	t.is(decamelize('nai\u{308}veApproach'), 'nai\u{308}ve_approach');
+	t.is(decamelize('pho\u{302}\u{301}Bar'), 'pho\u{302}\u{301}_bar'); // Several marks
+	t.is(decamelize('XMLE\u{301}cole'), 'xml_e\u{301}cole');
+	t.is(decamelize('A\u{30A}Bcd'), 'a\u{30A}_bcd');
+	t.is(decamelize('XA\u{30A}ngstro\u{308}m'), 'x_a\u{30A}ngstro\u{308}m');
+	t.is(decamelize('E\u{301}COLEName'), 'e\u{301}cole_name');
+	t.is(decamelize('cafe\u{301}Menu', {separator: '-'}), 'cafe\u{301}-menu');
+});
+
+test('splits words with decomposed accents with preserveConsecutiveUppercase', t => {
+	const options = {preserveConsecutiveUppercase: true};
+	t.is(decamelize('cafe\u{301}Menu', options), 'cafe\u{301}_menu');
+	t.is(decamelize('XMLE\u{301}cole', options), 'XML_e\u{301}cole');
+	t.is(decamelize('XA\u{30A}ngstro\u{308}m', options), 'X_a\u{30A}ngstro\u{308}m');
+
+	// A combining mark after an uppercase letter did not count as part of an uppercase sequence, so the letter was lowercased.
+	t.is(decamelize('E\u{301}COLEName', options), 'E\u{301}COLE_name');
+	t.is(decamelize('dataForE\u{301}TAT', options), 'data_for_E\u{301}TAT');
+	t.is(decamelize('A\u{30A}Bcd', options), 'A\u{30A}_bcd');
+});
+
+test('gives the same result for composed and decomposed input', t => {
+	const inputs = ['caféMenu', 'naïveApproach', 'XMLÉcole', 'ÅBcd', 'XÅngström', 'ÉCOLEName', 'überÄrger', 'ÀÉÎÕÜ', 'São_PauloÉCity', 'dataForÉTAT', 'ÉtatÉ', 'aÉB'];
+	for (const options of [{}, {preserveConsecutiveUppercase: true}, {separator: ' '}]) {
+		t.deepEqual(
+			inputs.map(input => decamelize(input.normalize('NFD'), options)),
+			inputs.map(input => decamelize(input, options).normalize('NFD')),
+			JSON.stringify(options),
+		);
+	}
+});
+
 test('long strings', t => {
 	// Factor to increase the test string
 	const times = 100;
@@ -208,4 +243,27 @@ test('Performance: single uppercase lookaround pattern', t => {
 
 	// Generous bound to avoid flakiness in CI.
 	t.true(ms < 250, `expected <250ms, got ${ms.toFixed(3)}ms`);
+});
+
+test('Performance: long runs of combining marks', t => {
+	const mark = '\u{301}';
+	const inputs = [
+		mark.repeat(100_000),
+		'a' + mark.repeat(100_000) + 'B',
+		'A' + mark.repeat(100_000) + 'B' + mark.repeat(100_000) + '!',
+		('A' + mark).repeat(50_000),
+		('aB' + mark).repeat(30_000),
+		('1' + mark).repeat(50_000) + 'a',
+	];
+
+	for (const preserveConsecutiveUppercase of [false, true]) {
+		const ms = measureMs(() => {
+			for (const input of inputs) {
+				decamelize(input, {preserveConsecutiveUppercase});
+			}
+		});
+
+		// Quadratic behavior would take minutes.
+		t.true(ms < 1000, `expected <1000ms, got ${ms.toFixed(3)}ms`);
+	}
 });
