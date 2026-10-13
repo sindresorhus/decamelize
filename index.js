@@ -19,8 +19,8 @@ export default function decamelize(
 		);
 	}
 
-	// Checking the second character is done later on. Therefore process shorter strings here.
-	if (text.length < 2) {
+	// A single Unicode character with attached combining marks is still one letter, including astral and decomposed text.
+	if (text.length < 2 || /^.\p{Mark}*$/su.test(text)) {
 		return preserveConsecutiveUppercase ? text : text.toLowerCase();
 	}
 

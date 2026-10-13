@@ -523,3 +523,23 @@ test('recognizes Unicode casing outside letter categories', () => {
 
 	assert.equal(decamelize('\u{345}B'), '\u{345}b');
 });
+
+test('preserves a single letter regardless of its Unicode encoding', () => {
+	for (const input of ['A', 'É', 'İ', 'ᾈ', '\u{10400}', '\u{104B0}', '\u{1E900}', 'E\u{301}', 'A\u{30A}', 'A\u{323}\u{306}', '\u{10400}\u{301}']) {
+		for (const separator of ['_', '', 'X']) {
+			assert.equal(decamelize(input, {separator}), input.toLowerCase());
+			assert.equal(decamelize(input, {separator, preserveConsecutiveUppercase: true}), input);
+			assert.equal(decamelize(input.normalize('NFD'), {separator, preserveConsecutiveUppercase: true}), input.normalize('NFD'));
+		}
+	}
+
+	for (const input of ['', 'a', 'é', 'a\u{301}', '\u{301}', '\u{301}\u{301}', '\n', '💡', '\uD800', '\uDC00']) {
+		assert.equal(decamelize(input, {preserveConsecutiveUppercase: true}), input);
+		assert.equal(decamelize(input), input.toLowerCase());
+	}
+
+	// Two letters still follow the usual acronym and word rules.
+	assert.equal(decamelize('E\u{301}t', {preserveConsecutiveUppercase: true}), 'e\u{301}t');
+	assert.equal(decamelize('\u{10400}\u{10428}', {preserveConsecutiveUppercase: true}), '\u{10428}\u{10428}');
+	assert.equal(decamelize('\u{10400}\u{10401}', {preserveConsecutiveUppercase: true}), '\u{10400}\u{10401}');
+});
