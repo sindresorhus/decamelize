@@ -1,26 +1,9 @@
-// An uppercase letter that starts a capitalized word after another uppercase letter: the `S` in `URLString`.
-// A combining mark belongs to the letter before it, which matters for decomposed (NFD) text.
-// Each lookbehind is preceded by a lookahead, so it only runs before an uppercase letter, which keeps it linear.
-const uppercaseWordStart = /(?=\p{Uppercase_Letter})(?<=\p{Uppercase_Letter}\p{Mark}*)\p{Uppercase_Letter}(?=\p{Mark}*\p{Lowercase_Letter})/gu;
-
-const handlePreserveConsecutiveUppercase = (decamelized, separator) => {
-	// Lowercase all single uppercase characters. As we
-	// want to preserve uppercase sequences, we cannot
-	// simply lowercase the separated string at the end.
-	// `data_For_USACounties` → `data_for_USACounties`
-	// A combining mark belongs to the letter before it, so `É` in decomposed (NFD) text is still part of `ÉTAT`.
-	decamelized = decamelized.replace(
-		/(?=[\p{Uppercase_Letter}\d])(?<![\p{Uppercase_Letter}\d]\p{Mark}*)[\p{Uppercase_Letter}\d](?!\p{Mark}*[\p{Uppercase_Letter}\d])/gu,
-		$0 => $0.toLowerCase(),
-	);
-
-	// Remaining uppercase sequences will be separated from lowercase sequences.
-	// `data_For_USACounties` → `data_for_USA_counties`
-	return decamelized.replace(
-		uppercaseWordStart,
-		letter => separator + letter.toLowerCase(),
-	);
-};
+// An uppercase letter, with the characters before and after it. A combining mark belongs to the letter before it, which matters for decomposed (NFD) text, so marks are skipped.
+// A digit counts as lowercase before the letter, and as uppercase after it: `O2Level` → `O2_Level`.
+// An `s` after the letter at the end of a word makes it a plural acronym, not a new word: `userIDs` → `user_ids`, not `user_i_ds`. Before another word, it is more often a word like `Is` (`userIDIsValid`), so it is split there. A digit continues a word, like in `mp3Player`.
+// Everything is decided on the original text in one pass, as a separator inserted earlier would hide where a word ends.
+// The leading lookahead makes the lookbehind only run before an uppercase letter, which keeps it linear.
+const uppercaseLetter = /(?=\p{Uppercase_Letter})(?<=(?:([\p{Lowercase_Letter}\d])|(\p{Uppercase_Letter}))?\p{Mark}*)\p{Uppercase_Letter}(?=\p{Mark}*(?:(s(?![\p{Letter}\p{Mark}\d]))|(\p{Lowercase_Letter})|([\p{Uppercase_Letter}\d]))?)/gu;
 
 export default function decamelize(
 	text,
@@ -40,21 +23,29 @@ export default function decamelize(
 		return preserveConsecutiveUppercase ? text : text.toLowerCase();
 	}
 
-	// Split lowercase sequences followed by uppercase character.
-	// `dataForUSACounties` → `data_For_USACounties`
-	// `myURLstring → `my_URLstring`
-	const decamelized = text.replace(
-		/(?=\p{Uppercase_Letter})(?<=[\p{Lowercase_Letter}\d]\p{Mark}*)/gu,
-		() => separator,
-	);
+	const decamelized = text.replace(uppercaseLetter, (letter, afterLowercase, afterUppercase, beforePlural, beforeLowercase, beforeUppercase) => {
 
-	if (preserveConsecutiveUppercase) {
-		return handlePreserveConsecutiveUppercase(decamelized, separator);
-	}
+		// Split lowercase sequences followed by uppercase character.
+		// `dataForUSACounties` → `data_For_USACounties`
+		// `myURLstring → `my_URLstring`
+		// Split multiple uppercase characters followed by one or more lowercase characters.
+		// `my_URLstring` → `my_ur_lstring`
+		const startsWord = afterLowercase !== undefined || (afterUppercase !== undefined && beforeLowercase !== undefined);
+		const prefix = startsWord ? separator : '';
 
-	// Split multiple uppercase characters followed by one or more lowercase characters.
-	// `my_URLstring` → `my_ur_lstring`
-	return decamelized
-		.replace(uppercaseWordStart, letter => separator + letter)
-		.toLowerCase();
+		if (!preserveConsecutiveUppercase) {
+			return prefix + letter;
+		}
+
+		// Lowercase all single uppercase characters. As we
+		// want to preserve uppercase sequences, we cannot
+		// simply lowercase the separated string at the end.
+		// `data_For_USACounties` → `data_for_USACounties`
+		// Remaining uppercase sequences will be separated from lowercase sequences.
+		// `data_For_USACounties` → `data_for_USA_counties`
+		const isInUppercaseSequence = afterUppercase === undefined ? beforeUppercase !== undefined : beforeLowercase === undefined;
+		return prefix + (isInUppercaseSequence ? letter : letter.toLowerCase());
+	});
+
+	return preserveConsecutiveUppercase ? decamelized : decamelized.toLowerCase();
 }

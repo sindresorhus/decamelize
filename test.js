@@ -163,6 +163,61 @@ test('gives the same result for composed and decomposed input', t => {
 	}
 });
 
+test('keeps plural acronyms together', t => {
+	// The `s` of a plural acronym was taken as the start of a new word: `userIDs` → `user_i_ds`.
+	t.is(decamelize('userIDs'), 'user_ids');
+	t.is(decamelize('getURLs'), 'get_urls');
+	t.is(decamelize('listAPIs'), 'list_apis');
+	t.is(decamelize('IDs'), 'ids');
+	t.is(decamelize('PDFs'), 'pdfs');
+	t.is(decamelize('the_PDFs'), 'the_pdfs');
+	t.is(decamelize('getURLs-fromAPIs'), 'get_urls-from_apis');
+	t.is(decamelize('allIDs2'), 'all_i_ds2'); // A digit continues the word, like in `mp3Player`
+	t.is(decamelize('userIDs', {separator: '-'}), 'user-ids');
+	t.is(decamelize('E\u{301}TATs'), 'e\u{301}tats'); // Decomposed accent
+	t.is(decamelize('listCAFE\u{301}s'), 'list_cafe\u{301}s'); // Decomposed accent on the last acronym letter
+	t.is(decamelize('IDs\u{301}'), 'i_ds\u{301}'); // A decomposed `ś` is not a plural `s`, the same as a composed one
+	t.is(decamelize('ID\u{15B}'), 'i_d\u{15B}');
+
+	// A capitalized word starting with `s` after an acronym is still split.
+	t.is(decamelize('HTTPSServer'), 'https_server');
+	t.is(decamelize('XMLSchema'), 'xml_schema');
+
+	// An `s` followed by more lowercase letters is not a plural, so the uppercase letter before it starts a new word.
+	t.is(decamelize('APIsearch'), 'ap_isearch');
+	t.is(decamelize('GPUsed'), 'gp_used');
+
+	// Before a capitalized word, `Is`, `As`, `Us`, and `Os` after an acronym are words, which is more common than a plural acronym there. A plural acronym is therefore only recognized at the end of a word.
+	t.is(decamelize('userIDIsValid'), 'user_id_is_valid');
+	t.is(decamelize('fileURLIsDirectory'), 'file_url_is_directory');
+	t.is(decamelize('XMLIsValid'), 'xml_is_valid');
+	t.is(decamelize('URLAsString'), 'url_as_string');
+	t.is(decamelize('isCPUUsHigh'), 'is_cpu_us_high');
+	t.is(decamelize('userIDsList'), 'user_i_ds_list');
+
+	// At the end of a word, a plural acronym is more common than a word: `exportPDFAs` is a known limitation.
+	t.is(decamelize('exportPDFAs'), 'export_pdfas');
+
+	// A single uppercase letter followed by `s` is a word.
+	t.is(decamelize('thisIs'), 'this_is');
+	t.is(decamelize('fooAs'), 'foo_as');
+});
+
+test('keeps plural acronyms together with preserveConsecutiveUppercase', t => {
+	const options = {preserveConsecutiveUppercase: true};
+	t.is(decamelize('userIDs', options), 'user_IDs');
+	t.is(decamelize('listAPIs', options), 'list_APIs');
+	t.is(decamelize('IDs', options), 'IDs');
+	t.is(decamelize('getURLs-fromAPIs', options), 'get_URLs-from_APIs');
+	t.is(decamelize('allIDs2', options), 'all_I_ds2');
+	t.is(decamelize('E\u{301}TATs', options), 'E\u{301}TATs');
+	t.is(decamelize('IDs\u{301}', options), 'I_ds\u{301}');
+	t.is(decamelize('HTTPSServer', options), 'HTTPS_server');
+	t.is(decamelize('userIDIsValid', options), 'user_ID_is_valid');
+	t.is(decamelize('userIDsList', options), 'user_I_ds_list');
+	t.is(decamelize('thisIs', options), 'this_is');
+});
+
 test('long strings', t => {
 	// Factor to increase the test string
 	const times = 100;
