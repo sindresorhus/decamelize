@@ -265,8 +265,8 @@ test('casing with preserveConsecutiveUppercase does not depend on the separator'
 
 test('separator with letters is inserted once', () => {
 	// The separator was inserted before the second split ran, so its letters could look like the end of an acronym.
-	assert.equal(decamelize('aBc', {separator: 'X'}), 'axbc');
-	assert.equal(decamelize('fooBar', {separator: 'ABC'}), 'fooabcbar');
+	assert.equal(decamelize('aBc', {separator: 'X'}), 'aXbc');
+	assert.equal(decamelize('fooBar', {separator: 'ABC'}), 'fooABCbar');
 	assert.equal(decamelize('fooBar', {separator: 'ABC', preserveConsecutiveUppercase: true}), 'fooABCbar');
 });
 
@@ -432,4 +432,21 @@ test('rejects non-string inputs and separators', () => {
 
 	assert.equal(decamelize('fooBar', {separator: undefined}), 'foo_bar');
 	assert.equal(decamelize('fooBar', undefined), 'foo_bar');
+});
+
+test('preserves the exact custom separator in both casing modes', () => {
+	for (const separator of ['X', 'ABC', 'Å', 'İ', 'ΟΣ', 'xΣ', '$&', '$1', '$$', '$`', "$'", '', '\u{301}', '\n']) {
+		assert.equal(decamelize('fooBarURL', {separator}), ['foo', 'bar', 'url'].join(separator));
+		assert.equal(decamelize('fooBarURL', {separator, preserveConsecutiveUppercase: true}), ['foo', 'bar', 'URL'].join(separator));
+		assert.equal(decamelize('XMLHttpRequest', {separator}), ['xml', 'http', 'request'].join(separator));
+	}
+
+	// Case conversion belongs to each word, so letters in a separator cannot change Greek final sigma.
+	for (const separator of ['_', '', 'A', 'x']) {
+		assert.equal(decamelize('ΟΣAlpha', {separator}), ['ος', 'alpha'].join(separator));
+		assert.equal(decamelize('ΟΔΟΣName', {separator}), ['οδος', 'name'].join(separator));
+	}
+
+	assert.equal(decamelize('Foo', {separator: 'XYZ'}), 'foo');
+	assert.equal(decamelize('fooXYZbar', {separator: 'XYZ'}), 'fooXYZxyXYZzbar');
 });

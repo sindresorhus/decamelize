@@ -23,7 +23,9 @@ export default function decamelize(
 		return preserveConsecutiveUppercase ? text : text.toLowerCase();
 	}
 
-	const decamelized = text.replace(uppercaseLetter, (letter, afterLowercase, afterUppercase, beforePlural, beforeLowercase, beforeUppercase) => {
+	const words = [];
+	let wordStart = 0;
+	const decamelized = text.replace(uppercaseLetter, (letter, afterLowercase, afterUppercase, beforePlural, beforeLowercase, beforeUppercase, offset) => {
 
 		// Split lowercase sequences followed by uppercase character.
 		// `dataForUSACounties` → `data_For_USACounties`
@@ -34,7 +36,12 @@ export default function decamelize(
 		const prefix = startsWord ? separator : '';
 
 		if (!preserveConsecutiveUppercase) {
-			return prefix + letter;
+			if (startsWord) {
+				words.push(text.slice(wordStart, offset).toLowerCase());
+				wordStart = offset;
+			}
+
+			return letter;
 		}
 
 		// Lowercase all single uppercase characters. As we
@@ -47,5 +54,11 @@ export default function decamelize(
 		return prefix + (isInUppercaseSequence ? letter : letter.toLowerCase());
 	});
 
-	return preserveConsecutiveUppercase ? decamelized : decamelized.toLowerCase();
+	if (preserveConsecutiveUppercase) {
+		return decamelized;
+	}
+
+	// Lowercase each word before inserting the separator, preserving the separator and word-local casing such as Greek final sigma.
+	words.push(text.slice(wordStart).toLowerCase());
+	return words.join(separator);
 }
