@@ -36,7 +36,7 @@ export default function decamelize(
 		return preserveConsecutiveUppercase ? text : text.toLowerCase();
 	}
 
-	const replacement = `$1${separator}$2`;
+	const replacement = (_, $1, $2) => $1 + separator + $2;
 
 	// Split lowercase sequences followed by uppercase character.
 	// `dataForUSACounties` → `data_For_USACounties`

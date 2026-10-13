@@ -43,6 +43,18 @@ test('separator in string', t => {
 	t.is(decamelize('my_URL_string'), 'my_url_string');
 });
 
+test('separator with replacement patterns is inserted literally', t => {
+	t.is(decamelize('helloWorld', {separator: '$&'}), 'hello$&world');
+	t.is(decamelize('myURLString', {separator: '$1'}), 'my$1url$1string');
+	t.is(
+		decamelize('testGUILabel', {
+			separator: '$$',
+			preserveConsecutiveUppercase: true,
+		}),
+		'test$$GUI$$label',
+	);
+});
+
 test('separator and options passed', t => {
 	t.is(
 		decamelize('testGUILabel', {
