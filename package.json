@@ -5,28 +5,24 @@
 	"license": "MIT",
 	"repository": "sindresorhus/decamelize",
 	"funding": "https://github.com/sponsors/sindresorhus",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
-	},
+	"author": "Sindre Sorhus <sindresorhus@gmail.com> (https://sindresorhus.com)",
 	"type": "module",
-	"exports": "./index.js",
-	"types": "./index.d.ts",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
 	"sideEffects": false,
 	"engines": {
-		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+		"node": ">=22"
 	},
 	"scripts": {
-		"test": "node --test && tsd",
-		"//test": "xo && node --test && tsd"
+		"test": "xo && node --test test.js && nz"
 	},
 	"files": [
 		"index.js",
 		"index.d.ts"
 	],
 	"keywords": [
-		"decamelize",
 		"decamelcase",
 		"camelcase",
 		"lowercase",
@@ -38,7 +34,16 @@
 		"convert"
 	],
 	"devDependencies": {
-		"tsd": "^0.24.1",
-		"xo": "^0.52.4"
-	}
+		"nz": "^0.1.0",
+		"typescript": "^6.0.3",
+		"xo": "^5.0.1"
+	},
+	"xo": [
+		{
+			"files": "test.js",
+			"rules": {
+				"node-test/no-conditional-assertion": "off"
+			}
+		}
+	]
 }

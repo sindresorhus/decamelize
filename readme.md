@@ -33,6 +33,8 @@ decamelize('testGUILabel', {preserveConsecutiveUppercase: false});
 
 ### decamelize(input, options?)
 
+Plural acronyms are kept together at the end of a word: `userIDs` → `user_ids`. Ambiguous endings such as `exportPDFAs` are treated as plural acronyms.
+
 #### input
 
 Type: `string`

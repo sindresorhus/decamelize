@@ -39,6 +39,8 @@ export type Options = {
 /**
 Convert a camelized string into a lowercased one with a custom separator: `unicornRainbow` → `unicorn_rainbow`.
 
+Plural acronyms are kept together at the end of a word: `userIDs` → `user_ids`. Ambiguous endings such as `exportPDFAs` are treated as plural acronyms.
+
 @param string - The camelcase string to decamelize.
 
 @example

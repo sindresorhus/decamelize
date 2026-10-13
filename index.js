@@ -4,7 +4,9 @@
 // An `s` after the letter at the end of a word makes it a plural acronym, not a new word: `userIDs` → `user_ids`, not `user_i_ds`. Before another word, it is more often a word like `Is` (`userIDIsValid`), so it is split there. A digit continues a word, like in `mp3Player`.
 // Everything is decided on the original text in one pass, as a separator inserted earlier would hide where a word ends.
 // The leading lookahead makes the lookbehind only run before an uppercase or titlecase letter, which keeps it linear.
-const uppercaseLetter = /(?=[\p{Uppercase}\p{Titlecase_Letter}])(?<=(?:([\p{Lowercase}\p{Decimal_Number}])|([\p{Uppercase}\p{Titlecase_Letter}]))?\p{Mark}*)[\p{Uppercase}\p{Titlecase_Letter}](?=\p{Mark}*(?:(s(?![\p{Letter}\p{Uppercase}\p{Lowercase}\p{Mark}\p{Decimal_Number}]))|(\p{Lowercase})|([\p{Uppercase}\p{Titlecase_Letter}\p{Decimal_Number}]))?)/gu;
+// The lookbehind and the trailing lookahead only capture the characters around the letter, so they can match nothing.
+// eslint-disable-next-line regexp/no-useless-assertions, regexp/no-empty-lookarounds-assertion, regexp/prefer-named-capture-group
+const uppercaseLetter = /(?=[\p{Titlecase_Letter}\p{Uppercase}])(?<=(?:([\p{Decimal_Number}\p{Lowercase}])|([\p{Titlecase_Letter}\p{Uppercase}]))?\p{Mark}*)[\p{Titlecase_Letter}\p{Uppercase}](?=\p{Mark}*(?:s(?![\p{Decimal_Number}\p{Letter}\p{Mark}\p{Lowercase}\p{Uppercase}])|(\p{Lowercase})|([\p{Decimal_Number}\p{Titlecase_Letter}\p{Uppercase}]))?)/gv;
 
 export default function decamelize(
 	text,
@@ -20,24 +22,23 @@ export default function decamelize(
 	}
 
 	// A single Unicode character with attached combining marks is still one letter, including astral and decomposed text.
-	if (text.length < 2 || /^.\p{Mark}*$/su.test(text)) {
+	if (text.length < 2 || /^.\p{Mark}*$/sv.test(text)) {
 		return preserveConsecutiveUppercase ? text : text.toLowerCase();
 	}
 
 	const words = [];
 	let wordStart = 0;
-	const decamelized = text.replace(uppercaseLetter, (letter, afterLowercase, afterUppercase, beforePlural, beforeLowercase, beforeUppercase, offset) => {
-
+	// eslint-disable-next-line max-params
+	const decamelized = text.replaceAll(uppercaseLetter, (letter, afterLowercase, afterUppercase, beforeLowercase, beforeUppercase, offset) => {
 		// Split lowercase sequences followed by uppercase character.
 		// `dataForUSACounties` → `data_For_USACounties`
 		// `myURLstring → `my_URLstring`
 		// Split multiple uppercase characters followed by one or more lowercase characters.
 		// `my_URLstring` → `my_ur_lstring`
-		const startsWord = afterLowercase !== undefined || (afterUppercase !== undefined && beforeLowercase !== undefined);
-		const prefix = startsWord ? separator : '';
+		const isWordStart = afterLowercase !== undefined || (afterUppercase !== undefined && beforeLowercase !== undefined);
 
 		if (!preserveConsecutiveUppercase) {
-			if (startsWord) {
+			if (isWordStart) {
 				words.push(text.slice(wordStart, offset).toLowerCase());
 				wordStart = offset;
 			}
@@ -51,6 +52,7 @@ export default function decamelize(
 		// `data_For_USACounties` → `data_for_USACounties`
 		// Remaining uppercase sequences will be separated from lowercase sequences.
 		// `data_For_USACounties` → `data_for_USA_counties`
+		const prefix = isWordStart ? separator : '';
 		const isInUppercaseSequence = afterUppercase === undefined ? beforeUppercase !== undefined : beforeLowercase === undefined;
 		return prefix + (isInUppercaseSequence ? letter : letter.toLowerCase());
 	});
