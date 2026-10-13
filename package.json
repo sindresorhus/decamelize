@@ -18,8 +18,8 @@
 		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
 	},
 	"scripts": {
-		"test": "ava && tsd",
-		"//test": "xo && ava && tsd"
+		"test": "node --test && tsd",
+		"//test": "xo && node --test && tsd"
 	},
 	"files": [
 		"index.js",
@@ -38,7 +38,6 @@
 		"convert"
 	],
 	"devDependencies": {
-		"ava": "^5.0.1",
 		"tsd": "^0.24.1",
 		"xo": "^0.52.4"
 	}
